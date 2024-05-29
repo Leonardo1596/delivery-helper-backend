@@ -17,6 +17,7 @@ const routeAuth = require('./routes/auth');
 const routeEntrie = require('./routes/entrie');
 const routeConstPerKm = require('./routes/costPerKm');
 const routeGoal = require('./routes/goal');
+const routeLimitGoals = require('./routes/limitGoals');
 
 // Routes
 app.use(routeHomeApi);
@@ -24,6 +25,7 @@ app.use(routeAuth);
 app.use(routeEntrie);
 app.use(routeConstPerKm);
 app.use(routeGoal);
+app.use(routeLimitGoals);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)

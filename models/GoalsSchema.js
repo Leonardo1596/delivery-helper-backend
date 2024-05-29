@@ -5,25 +5,15 @@ const goalsSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    salario: {
-        segunda: {
-            type: Number,
-            required: true
-        },
-        domingo: {
-            type: Number,
-            required: true
-        }
-    },
-    meta_1: {
+    salaryLimit: {
         type: Number,
         required: true
     },
-    meta_2: {
+    goal1Limit: {
         type: Number,
         required: true
     },
-    restante: {
+    goal2Limit: {
         type: Number,
         required: true
     },

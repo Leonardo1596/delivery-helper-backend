@@ -5,6 +5,7 @@ const Entrie = require('../models/EntriesSchema');
 const Goal = require('../models/GoalsSchema');
 const CostPerKm = require('../models/CostPerKmSchema');
 const GoalsController = require('../controllers/GoalsController');
+const LimitGoalsController = require('../controllers/LimitGoalsController');
 const CostPerKmController = require('../controllers/CostPerKmController');
 const { isFirstLoginOfWeek } = require('../utils/dateUltils');
 
@@ -36,20 +37,16 @@ const register = async (req, res, next) => {
             expiresIn: '3600s'
         });
 
-        // Goal data
-        const goalData = {
+        // Limit goal data
+        const limitGoalData = {
             userId: savedUser._id,
-            salario: {
-                segunda: 0.00,
-                domingo: 0.00
-            },
-            meta_1: 0.00,
-            meta_2: 0.00,
-            restante: 0.00
+            salaryLimit: 0.00,
+            goal1Limit: 0.00,
+            goal2Limit: 0.00,
         };
-
-        // Create goal to user
-        const goal = await GoalsController.createGoal(goalData);
+        
+        // Create liit goal to user
+        const limitGoal = await LimitGoalsController.createGoalsLimit(limitGoalData);
 
         // CostPerKm data
         const costPerKmData = {
