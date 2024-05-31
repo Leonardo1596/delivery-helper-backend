@@ -131,6 +131,7 @@ const updateUser = async (req, res) => {
         const { userId } = req.params;
 
         const {
+            email,
             username,
         } = req.body;
 
@@ -140,11 +141,10 @@ const updateUser = async (req, res) => {
         if (!existingUser) {
             return res.status(404).json({ error: 'Usuário não encontrado' });
         };
-        console.log(updateFields);
 
         const updatedUser = await User.findOneAndUpdate(
             { _id: userId },
-            { username: username },
+            { email: email, username: username },
             { new: true }
         );
 
