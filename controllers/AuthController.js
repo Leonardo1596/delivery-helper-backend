@@ -156,7 +156,31 @@ const updateUser = async (req, res) => {
     }
 };
 
+const getUser = async (req, res) => {
+
+    User.findOne({ _id: req.params.userId })
+        .then(async user => {
+            const goals = await Goal.find({ userId: user._id });
+            const costPerKm = await CostPerKm.find({ userId: user._id });
+            const entries = await Entrie.find({ userId: user._id });
+            const firstLoginOfWeek = isFirstLoginOfWeek(user.lastLogin);
+
+            let userInfo = {
+                _id: user._id,
+                email: user.email,
+                username: user.username,
+                goals: goals,
+                costPerKm: costPerKm,
+                entries: entries,
+                lastLogin: user.lastLogin,
+                firstLoginOfWeek
+            }
+
+            res.json(userInfo);
+        })
+};
+
 
 module.exports = {
-    register, login, updateUser
+    register, login, updateUser, getUser
 }
