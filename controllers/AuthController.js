@@ -51,11 +51,26 @@ const register = async (req, res, next) => {
         // CostPerKm data
         const costPerKmData = {
             userId: savedUser._id,
-            oleo: 0.03,
-            relacao: 0.003,
-            pneuDianteiro: 0.0035,
-            pneuTraseiro: 0.0109,
-            gasolina: 0.176
+            oleo: {
+                value: 23,
+                km: 2000
+            },
+            relacao: {
+                value: 80,
+                km: 21000
+            },
+            pneuDianteiro: {
+                value: 140,
+                km: 40000
+            },
+            pneuTraseiro: {
+                value: 230,
+                km: 21000
+            },
+            gasolina: {
+                value: 6.19,
+                km: 35
+            }
         };
 
         // Create costPerKm to user
