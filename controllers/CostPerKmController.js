@@ -26,7 +26,19 @@ const updateCostPerKm = async (req, res) => {
 
         const updatedCostPerKm = await CostPerKm.findOneAndUpdate(
             { userId, _id: costPerKmId },
-            { oleo, relacao, pneuDianteiro, pneuTraseiro, gasolina },
+            // { oleo, relacao, pneuDianteiro, pneuTraseiro, gasolina },
+            { 
+                'oleo.value': oleo.value,
+                'oleo.km': oleo.km,
+                'relacao.value': relacao.value,
+                'relacao.km': relacao.km,
+                'pneuDianteiro.value': pneuDianteiro.value,
+                'pneuDianteiro.km': pneuDianteiro.km,
+                'pneuTraseiro.value': pneuTraseiro.value,
+                'pneuTraseiro.km': pneuTraseiro.km,
+                'gasolina.value': gasolina.value,
+                'gasolina.km': gasolina.km
+            },
             { new: true }
         );
 
@@ -42,7 +54,23 @@ const updateCostPerKm = async (req, res) => {
     }
 };
 
+const getCostPerKm = async (req, res) => {
+    try {
+        CostPerKm.findOne({ _id: req.params.id })
+        .then(async cost => {
+            res.json(cost);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     createCostPerKm,
-    updateCostPerKm
+    updateCostPerKm,
+    getCostPerKm
 };

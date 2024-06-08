@@ -19,6 +19,7 @@ const register = async (req, res, next) => {
             email: req.body.email,
             username: req.body.username,
             password: hashedPass,
+            totalCostPerKm: 0,
             confirmPassword: req.body.confirmPassword,
         });
 
@@ -40,37 +41,21 @@ const register = async (req, res, next) => {
         // Limit goal data
         const limitGoalData = {
             userId: savedUser._id,
-            salaryLimit: 0.00,
+            salaryLimit: 400.00,
             goal1Limit: 0.00,
             goal2Limit: 0.00,
         };
-        
+
         // Create liit goal to user
         const limitGoal = await LimitGoalsController.createGoalsLimit(limitGoalData);
 
-        // CostPerKm data
         const costPerKmData = {
             userId: savedUser._id,
-            oleo: {
-                value: 23,
-                km: 2000
-            },
-            relacao: {
-                value: 80,
-                km: 21000
-            },
-            pneuDianteiro: {
-                value: 140,
-                km: 40000
-            },
-            pneuTraseiro: {
-                value: 230,
-                km: 21000
-            },
-            gasolina: {
-                value: 6.19,
-                km: 35
-            }
+            oleo: { value: 0, km: 0 },
+            relacao: { value: 0, km: 0 },
+            pneuDianteiro: { value: 0, km: 0 },
+            pneuTraseiro: { value: 0, km: 0 },
+            gasolina: { value: 0, km: 0 },
         };
 
         // Create costPerKm to user
@@ -113,6 +98,43 @@ const login = (req, res, next) => {
                         const goals = await Goal.find({ userId: user._id });
                         const costPerKm = await CostPerKm.find({ userId: user._id });
 
+                        let totalCostPerKm;
+                        function totalCalculateCostPerKm() {
+                            const oleo = costPerKm[0].oleo.km !== 0 ? Number((costPerKm[0].oleo.value / costPerKm[0].oleo.km).toFixed(4)) : 0;
+                            const relacao = costPerKm[0].relacao.km !== 0 ? Number((costPerKm[0].relacao.value / costPerKm[0].relacao.km).toFixed(4)) : 0;
+                            const pneuDianteiro = costPerKm[0].pneuDianteiro.km !== 0 ? Number((costPerKm[0].pneuDianteiro.value / costPerKm[0].pneuDianteiro.km).toFixed(4)) : 0;
+                            const pneuTraseiro = costPerKm[0].pneuTraseiro.km !== 0 ? Number((costPerKm[0].pneuTraseiro.value / costPerKm[0].pneuTraseiro.km).toFixed(4)) : 0;
+                            const gasolina = costPerKm[0].gasolina.km !== 0 ? Number((costPerKm[0].gasolina.value / costPerKm[0].gasolina.km).toFixed(4)) : 0;
+
+                            const costPerKmData = {
+                                oleo,
+                                relacao,
+                                pneuDianteiro,
+                                pneuTraseiro,
+                                gasolina
+                            };
+
+                            console.log(costPerKmData);
+
+                            // Calculate costPerKm total
+                            function calculateCostPerKmTotal(obj) {
+                                const fields = ['oleo', 'relacao', 'pneuDianteiro', 'pneuTraseiro', 'gasolina'];
+                                let total = 0;
+
+                                fields.forEach(field => {
+                                    if (obj[field] !== undefined) {
+                                        total += obj[field];
+                                    }
+                                });
+
+                                return total;
+                            };
+
+                            totalCostPerKm = calculateCostPerKmTotal(costPerKmData);
+                            console.log(totalCostPerKm);
+                        };
+                        totalCalculateCostPerKm();
+
                         let userInfo = {
                             _id: user._id,
                             email: user.email,
@@ -121,6 +143,7 @@ const login = (req, res, next) => {
                             goals: goals,
                             entries: entries,
                             costPerKm: costPerKm,
+                            totalCostPerKm: totalCostPerKm,
                             lastLogin: user.lastLogin,
                             firstLoginOfWeek
                         };
@@ -148,6 +171,7 @@ const updateUser = async (req, res) => {
         const {
             email,
             username,
+            totalCostPerKm,
         } = req.body;
 
         // Get existing user
@@ -159,7 +183,7 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await User.findOneAndUpdate(
             { _id: userId },
-            { email: email, username: username },
+            { email: email, username: username, totalCostPerKm: totalCostPerKm },
             { new: true }
         );
 
@@ -180,12 +204,46 @@ const getUser = async (req, res) => {
             const entries = await Entrie.find({ userId: user._id });
             const firstLoginOfWeek = isFirstLoginOfWeek(user.lastLogin);
 
+            function totalCalculateCostPerKm() {
+                const oleo = costPerKm[0].oleo.km !== 0 ? Number((costPerKm[0].oleo.value / costPerKm[0].oleo.km).toFixed(4)) : 0;
+                const relacao = costPerKm[0].relacao.km !== 0 ? Number((costPerKm[0].relacao.value / costPerKm[0].relacao.km).toFixed(4)) : 0;
+                const pneuDianteiro = costPerKm[0].pneuDianteiro.km !== 0 ? Number((costPerKm[0].pneuDianteiro.value / costPerKm[0].pneuDianteiro.km).toFixed(4)) : 0;
+                const pneuTraseiro = costPerKm[0].pneuTraseiro.km !== 0 ? Number((costPerKm[0].pneuTraseiro.value / costPerKm[0].pneuTraseiro.km).toFixed(4)) : 0;
+                const gasolina = costPerKm[0].gasolina.km !== 0 ? Number((costPerKm[0].gasolina.value / costPerKm[0].gasolina.km).toFixed(4)) : 0;
+
+                const costPerKmData = {
+                    oleo,
+                    relacao,
+                    pneuDianteiro,
+                    pneuTraseiro,
+                    gasolina
+                };
+
+                // Calculate costPerKm total
+                function calculateCostPerKmTotal(obj) {
+                    const fields = ['oleo', 'relacao', 'pneuDianteiro', 'pneuTraseiro', 'gasolina'];
+                    let total = 0;
+
+                    fields.forEach(field => {
+                        if (obj[field] !== undefined) {
+                            total += obj[field];
+                        }
+                    });
+
+                    return total;
+                };
+
+                totalCostPerKm = calculateCostPerKmTotal(costPerKmData);
+            };
+            totalCalculateCostPerKm();
+
             let userInfo = {
                 _id: user._id,
                 email: user.email,
                 username: user.username,
                 goals: goals,
                 costPerKm: costPerKm,
+                totalCostPerKm: totalCostPerKm,
                 entries: entries,
                 lastLogin: user.lastLogin,
                 firstLoginOfWeek

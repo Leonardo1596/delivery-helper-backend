@@ -13,6 +13,10 @@ const userSchema = mongoose.Schema({
         type: 'string',
         required: true
     },
+    totalCostPerKm: {
+        type: Number,
+        required: true
+    },
     lastLogin: {
         type: Date
     },
