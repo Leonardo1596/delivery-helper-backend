@@ -8,10 +8,10 @@ const createEntrie = async (req, res) => {
             initialKm,
             finalKm,
             grossGain,
-            costPerKm
+            costPerKm,
+            gasolinePrice,
+            gasolineExpense
         } = req.body;
-
-        console.log(date);
 
         const kmTraveled = finalKm - initialKm;
         const spent = kmTraveled * costPerKm;
@@ -21,7 +21,6 @@ const createEntrie = async (req, res) => {
         const [year, month, day] = date.split('-');
         const weekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
         const weekDay = weekDays[new Date(`${month}/${day}/${year}`).getDay()];
-
 
         const newEntrie = new Entrie({
             userId,
@@ -34,9 +33,10 @@ const createEntrie = async (req, res) => {
             liquidGain,
             spent,
             percentageSpent,
-            costPerKm
+            costPerKm,
+            gasolinePrice,
+            gasolineExpense
         });
-        console.log(req.body);
         const savedEntrie = await newEntrie.save();
 
         res.json(savedEntrie);

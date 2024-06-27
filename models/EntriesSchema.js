@@ -45,6 +45,14 @@ const EntriesSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    gasolinePrice: {
+        type: Number,
+        required: true
+    },
+    gasolineExpense: {
+        type: Number,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
