@@ -7,6 +7,7 @@ const CostPerKm = require('../models/CostPerKmSchema');
 const GoalsController = require('../controllers/GoalsController');
 const LimitGoalsController = require('../controllers/LimitGoalsController');
 const CostPerKmController = require('../controllers/CostPerKmController');
+const PersonalExpense = require('../models/PersonalExpenseSchema');
 const { isFirstLoginOfWeek } = require('../utils/dateUltils');
 
 const register = async (req, res, next) => {
@@ -97,6 +98,7 @@ const login = (req, res, next) => {
                         const entries = await Entrie.find({ userId: user._id });
                         const goals = await Goal.find({ userId: user._id });
                         const costPerKm = await CostPerKm.find({ userId: user._id });
+                        const personalExpense = await PersonalExpense.find({ userId: user._id });
 
                         let totalCostPerKm;
                         function totalCalculateCostPerKm() {
@@ -143,10 +145,13 @@ const login = (req, res, next) => {
                             goals: goals,
                             entries: entries,
                             costPerKm: costPerKm,
+                            personalExpense: personalExpense,
                             totalCostPerKm: totalCostPerKm,
                             lastLogin: user.lastLogin,
                             firstLoginOfWeek
                         };
+
+                        console.log(userInfo);
 
                         // Successfully
                         console.log(`User: ${user.email} is signed`)
@@ -202,6 +207,7 @@ const getUser = async (req, res) => {
             const goals = await Goal.find({ userId: user._id });
             const costPerKm = await CostPerKm.find({ userId: user._id });
             const entries = await Entrie.find({ userId: user._id });
+            const personalExpense = await PersonalExpense.find({ userId: user._id });
             const firstLoginOfWeek = isFirstLoginOfWeek(user.lastLogin);
 
             function totalCalculateCostPerKm() {
@@ -245,6 +251,7 @@ const getUser = async (req, res) => {
                 costPerKm: costPerKm,
                 totalCostPerKm: totalCostPerKm,
                 entries: entries,
+                personalExpense: personalExpense,
                 lastLogin: user.lastLogin,
                 firstLoginOfWeek
             }
