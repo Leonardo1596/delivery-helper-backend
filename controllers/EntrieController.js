@@ -9,13 +9,14 @@ const createEntrie = async (req, res) => {
             finalKm,
             grossGain,
             costPerKm,
+            foodExpense,
             gasolinePrice,
             gasolineExpense
         } = req.body;
 
         const kmTraveled = finalKm - initialKm;
-        const spent = kmTraveled * costPerKm;
-        const liquidGain = grossGain - spent;
+        const spent = (kmTraveled * costPerKm) + foodExpense;
+        const liquidGain = grossGain - spent - foodExpense;
         const percentageSpent = (spent / grossGain) * 100;
 
         const [year, month, day] = date.split('-');
@@ -34,6 +35,7 @@ const createEntrie = async (req, res) => {
             spent,
             percentageSpent,
             costPerKm,
+            foodExpense,
             gasolinePrice,
             gasolineExpense
         });

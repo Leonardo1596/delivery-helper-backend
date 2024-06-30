@@ -41,6 +41,10 @@ const EntriesSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    foodExpense: {
+        type: Number,
+        required: true
+    },
     costPerKm: {
         type: Number,
         required: true
