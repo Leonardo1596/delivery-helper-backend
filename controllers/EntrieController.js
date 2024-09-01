@@ -17,7 +17,7 @@ const createEntrie = async (req, res) => {
         const kmTraveled = finalKm - initialKm;
         const spent = (kmTraveled * costPerKm) + foodExpense;
         const liquidGain = grossGain - spent;
-        const percentageSpent = !grossGain ? ((spent / grossGain) * 100) : 100;
+        const percentageSpent = grossGain !== 0 ? ((spent / grossGain) * 100) : 100;
 
         const [year, month, day] = date.split('-');
         const weekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
