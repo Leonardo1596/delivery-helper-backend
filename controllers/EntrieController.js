@@ -10,6 +10,7 @@ const createEntrie = async (req, res) => {
             grossGain,
             costPerKm,
             foodExpense,
+            otherExpense,
             gasolinePrice,
             gasolineExpense
         } = req.body;
@@ -36,6 +37,7 @@ const createEntrie = async (req, res) => {
             percentageSpent,
             costPerKm,
             foodExpense,
+            otherExpense,
             gasolinePrice,
             gasolineExpense
         });
