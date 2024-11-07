@@ -16,7 +16,7 @@ const createEntrie = async (req, res) => {
         } = req.body;
 
         const kmTraveled = finalKm - initialKm;
-        const spent = (kmTraveled * costPerKm) + foodExpense;
+        const spent = (kmTraveled * costPerKm) + foodExpense + otherExpense;
         const liquidGain = grossGain - spent;
         const percentageSpent = grossGain !== 0 ? ((spent / grossGain) * 100) : 100;
 
